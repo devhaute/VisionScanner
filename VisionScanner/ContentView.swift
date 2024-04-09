@@ -8,14 +8,15 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject private var viewModel = ContentViewModel()
+    
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            Text(viewModel.scannerAccessStatus.description)
         }
-        .padding()
+        .task {
+            await viewModel.requestScannerAccessStatus()
+        }
     }
 }
 
