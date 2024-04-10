@@ -8,6 +8,10 @@
 import AVFoundation
 import VisionKit
 
+enum ScanType {
+    case text, barcode
+}
+
 enum ScannerAccessStatusType {
     case notDetermined
     case cameraAccessNotGranted
@@ -34,6 +38,14 @@ enum ScannerAccessStatusType {
 @MainActor
 final class ContentViewModel: ObservableObject {
     @Published var scannerAccessStatus: ScannerAccessStatusType = .notDetermined
+    @Published var recognizedItems: [RecognizedItem] = []
+    @Published var scanType: ScanType = .barcode
+    @Published var textContentType: DataScannerViewController.TextContentType?
+    @Published var recognizesMultipleItems = true
+    
+    var recognizedDataType: DataScannerViewController.RecognizedDataType {
+        scanType == .barcode ? .barcode() : .text(textContentType: textContentType)
+    }
     
     private var isScannerAvailable: Bool {
         DataScannerViewController.isAvailable && DataScannerViewController.isSupported

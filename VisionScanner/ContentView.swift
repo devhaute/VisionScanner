@@ -12,11 +12,23 @@ struct ContentView: View {
     
     var body: some View {
         VStack {
-            Text(viewModel.scannerAccessStatus.description)
+            if viewModel.scannerAccessStatus == .scannerAvailable {
+                mainView
+            }
         }
         .task {
             await viewModel.requestScannerAccessStatus()
         }
+    }
+}
+
+extension ContentView {
+    private var mainView: some View {
+        ScannerView(
+            recognizedItems: $viewModel.recognizedItems,
+            recognizedDataType: viewModel.recognizedDataType,
+            recognizesMultipleItems: viewModel.recognizesMultipleItems
+        )
     }
 }
 
